@@ -47,12 +47,12 @@ public class CategoriaController {
 	public ResponseEntity<List<Categoria>> getAllByTipo(@PathVariable String tipo){
 		return ResponseEntity.ok(categoriaRepository.findAllByTipoContainingIgnoreCase(tipo));
 	}
-	@PostMapping
+	@PostMapping // CADASTRAR NOVA CATEGORIA
 	public ResponseEntity<Categoria> post(@Valid @RequestBody Categoria categoria){
 		return ResponseEntity.status(HttpStatus.CREATED).body(categoriaRepository.save(categoria));
 	}
 	
-	@PutMapping
+	@PutMapping // ATUALIZAR CATEGORIA
 	public ResponseEntity<Categoria> put(@Valid @RequestBody Categoria categoria){
 		if(categoriaRepository.existsById(categoria.getId()))
 		return ResponseEntity.ok(categoriaRepository.save(categoria));
@@ -60,7 +60,7 @@ public class CategoriaController {
 	}
 	
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	@DeleteMapping("/{id}")
+	@DeleteMapping("/{id}") // DELETAR CATEGORIA
 	public void delete(@PathVariable Long id) {
 		Optional<Categoria> categoria = categoriaRepository.findById(id);
 		

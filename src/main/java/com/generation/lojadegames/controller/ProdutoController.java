@@ -1,5 +1,6 @@
 package com.generation.lojadegames.controller;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,25 +36,34 @@ public class ProdutoController{
 	@Autowired
 	private CategoriaRepository categoriaRepository;
 	
-	@GetMapping
+	@GetMapping // LISTAR TODOS
 	public ResponseEntity <List<Produto>> getAll() {
 		return ResponseEntity.ok(produtoRepository.findAll());
 	}
 	
-	@GetMapping("/{id}")
+	@GetMapping("/{id}") // PROCURAR PRODUTO POR ID
 	public ResponseEntity <Produto> getById(@PathVariable Long id){
 		return produtoRepository.findById(id)
 		.map(resposta -> ResponseEntity.ok(resposta))
 		.orElse(ResponseEntity.notFound().build());
 	}
-
-	/*@GetMapping("/preco_menor/{valor}")
-	public ResponseEntity<List<Produto>> getAllByValor(@PathVariable BigDecimal valor){
-		return produtoRepository.findAllByValorContainingIgnoreCase(valor)
-				.orElse(ResponseEntity.notFound().build());
-	}*/
 	
-	@PostMapping
+	@GetMapping("/nome/{nome}") // PROCURAR PRODUTO POR NOME
+	public ResponseEntity<List<Produto>> getByNome(@PathVariable String nome){
+	    return ResponseEntity.ok(produtoRepository.findAllByNomeContainingIgnoreCase(nome));
+	}
+
+	@GetMapping("/valor_menor/{valor}") // LISTAR PRODUTO POR VALOR MENOR
+	public ResponseEntity<List<Produto>> getAllByValorMenor(@PathVariable BigDecimal valor){
+	    return ResponseEntity.ok(produtoRepository.findByValorLessThan(valor));
+	}
+
+	@GetMapping("/valor_maior/{valor}") // LISTAR PRODUTO POR VALOR MAIOR
+	public ResponseEntity<List<Produto>> getAllByValorMaior(@PathVariable BigDecimal valor){
+	    return ResponseEntity.ok(produtoRepository.findByValorGreaterThan(valor));
+	}
+	
+	@PostMapping // CADASTRAR NOVO PRODUTO
 	public ResponseEntity<Produto> post(@Valid @RequestBody Produto produto){
 		if (categoriaRepository.existsById(produto.getCategoria().getId())) {
 			
@@ -63,7 +73,7 @@ public class ProdutoController{
 		throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "A categoria não existe!", null);
 	}
 	
-	@PutMapping
+	@PutMapping // ATUALIZAR PRODUTO
 	public ResponseEntity<Produto> put(@Valid @RequestBody Produto produto){
 		if(produtoRepository.existsById(produto.getId())) {
 			if (categoriaRepository.existsById(produto.getCategoria().getId())) {
@@ -75,13 +85,12 @@ public class ProdutoController{
 	}
 	
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	@DeleteMapping("/{id}")
+	@DeleteMapping("/{id}") // DELETAR PRODUTO
 	public void delete(@PathVariable Long id) {
 		Optional<Produto> produto = produtoRepository.findById(id);
 		
 		if(produto.isEmpty()) 
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND);			
 			produtoRepository.deleteById(id);
-
 	}
 }

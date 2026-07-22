@@ -57,14 +57,6 @@ public class Categoria {
 		this.id = id;
 	}
 
-	public String getCategoria() {
-		return tipo;
-	}
-
-	public void setCategoria(String tipo) {
-		this.tipo = tipo;
-	}
-
 	public String getDescricao() {
 		return descricao;
 	}
