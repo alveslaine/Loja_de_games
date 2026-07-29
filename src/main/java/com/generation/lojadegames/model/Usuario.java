@@ -28,7 +28,7 @@ public class Usuario {
 
 	@Email(message = "E-mail inválido!")
 	@NotBlank(message = "O atributo E-mail é obrigatório!")
-	private String email;
+	private String usuario;
 
 	@NotBlank(message = "O Atributo Senha é Obrigatório!")
 	@Size(min = 8, message = "A Senha deve ter no mínimo 8 caracteres")
@@ -55,12 +55,12 @@ public class Usuario {
 		this.nome = nome;
 	}
 
-	public String getEmail() {
-		return email;
+	public String getUsuario() {
+		return usuario;
 	}
 
-	public void setEmail(String email) {
-		this.email = email;
+	public void setUsuario(String usuario) {
+		this.usuario = usuario;
 	}
 
 	public LocalDate getData_nascimento() {

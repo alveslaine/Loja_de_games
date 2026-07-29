@@ -1,5 +1,6 @@
 package com.generation.lojadegames.service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -37,14 +38,13 @@ public class UsuarioService {
 	}
 	
 	public Optional<Usuario> cadastrarUsuario(Usuario usuario){
-		if(usuarioRepository.findByUsuario(usuario.getNome()).isPresent()) {
-			return Optional.empty();
+		 if (usuario.getData_nascimento()
+		            .isAfter(LocalDate.now().minusYears(18))) {throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Cadastro permitido apenas para maiores de 18 anos");
+		    }
+		    usuario.setSenha(passwordEncoder.encode(usuario.getSenha()));
+		    usuario.setId(null);
+		    return Optional.of(usuarioRepository.save(usuario));
 		}
-		usuario.setSenha(passwordEncoder.encode(usuario.getSenha()));
-		usuario.setId(null);
-		
-		return Optional.of(usuarioRepository.save(usuario));
-	}
 	
 	public Optional<Usuario> atualizarUsuario(Usuario usuario){
 		if(usuarioRepository.findById(usuario.getId()).isEmpty()) {
@@ -86,6 +86,10 @@ public class UsuarioService {
 
 	private String gerarToken(String usuario) {
 		return "Bearer " + jwtService.generateToken(usuario);
+	}
+	
+	public void delete(Long id){
+	    usuarioRepository.deleteById(id);
 	}
 }
 
