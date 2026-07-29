@@ -36,6 +36,11 @@ public class Produto {
 	
 	@NotNull(message = "O atributo Valor é obrigatório!")
 	private BigDecimal valor;
+
+	@ManyToOne
+	@JoinColumn(name = "categoria_id")
+	@JsonIgnoreProperties("produtos")
+	private Categoria categoria;
 	
 	public Categoria getCategoria() {
 		return categoria;
@@ -45,11 +50,6 @@ public class Produto {
 		this.categoria = categoria;
 	}
 
-	@ManyToOne
-	@JoinColumn(name = "categoria_id")
-	@JsonIgnoreProperties("produtos")
-	private Categoria categoria;
-	
 	public Long getId() {
 		return id;
 	}
